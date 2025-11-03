@@ -1,4 +1,4 @@
-# 🌿 MapleCMS — The World's Lightest Open-Source CMS
+# 🍁 MapleCMS — The World's Lightest Open-Source CMS
 
 MapleCMS is a **modern, ultra-light, open-source Content Management System** built with **FastAPI**, **Next.js**, and **AWS-native infrastructure**.  
 It's designed for developers who want speed, simplicity, and full control — without the bloat of traditional CMS platforms.
