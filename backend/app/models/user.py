@@ -1,11 +1,14 @@
 """User model."""
 
 from datetime import datetime
-from sqlalchemy import Boolean, String, DateTime, BigInteger
+from sqlalchemy import Boolean, String, DateTime, BigInteger, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+
+
+IDType = BigInteger().with_variant(Integer(), "sqlite")
 
 
 class User(Base):
@@ -13,7 +16,7 @@ class User(Base):
 
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(IDType, primary_key=True, index=True, autoincrement=True)
     username: Mapped[str] = mapped_column(String(48), unique=True, nullable=False, index=True)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
