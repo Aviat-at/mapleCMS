@@ -2,12 +2,14 @@
 
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import String, Text, DateTime, BigInteger, ForeignKey, Index
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import String, Text, DateTime, BigInteger, ForeignKey, Index, JSON, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
+
+
+IDType = BigInteger().with_variant(Integer(), "sqlite")
 
 
 class Article(Base):
@@ -15,7 +17,7 @@ class Article(Base):
 
     __tablename__ = "article"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(IDType, primary_key=True, index=True, autoincrement=True)
     title: Mapped[str] = mapped_column(String(160), nullable=False)
     slug: Mapped[str] = mapped_column(String(180), unique=True, nullable=False, index=True)
     excerpt: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -25,10 +27,10 @@ class Article(Base):
     
     # Foreign Keys
     author_id: Mapped[int] = mapped_column(
-        BigInteger, ForeignKey("user.id", ondelete="RESTRICT"), nullable=False
+        IDType, ForeignKey("user.id", ondelete="RESTRICT"), nullable=False
     )
     category_id: Mapped[int | None] = mapped_column(
-        BigInteger, ForeignKey("category.id", ondelete="SET NULL"), nullable=True
+        IDType, ForeignKey("category.id", ondelete="SET NULL"), nullable=True
     )
     
     # Timestamps
@@ -41,7 +43,7 @@ class Article(Base):
     )
     
     # Metadata
-    meta_json: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict, server_default="{}")
+    meta_json: Mapped[dict] = mapped_column(JSON, nullable=False, default=dict, server_default="{}")
 
     # Relationships
     author = relationship("User", back_populates="articles")
