@@ -8,12 +8,23 @@ from app.core.config import settings
 
 
 # Create async engine
+engine_kwargs = {
+    "echo": settings.DEBUG,
+    "pool_pre_ping": True,
+}
+
+if settings.DATABASE_URL.startswith("sqlite+"):
+    # SQLite's async driver does not support custom pool sizing arguments.
+    pass
+else:
+    engine_kwargs.update(
+        pool_size=settings.DATABASE_POOL_SIZE,
+        max_overflow=settings.DATABASE_MAX_OVERFLOW,
+    )
+
 engine = create_async_engine(
     settings.DATABASE_URL,
-    echo=settings.DEBUG,
-    pool_size=settings.DATABASE_POOL_SIZE,
-    max_overflow=settings.DATABASE_MAX_OVERFLOW,
-    pool_pre_ping=True,
+    **engine_kwargs,
 )
 
 # Create async session factory

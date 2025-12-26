@@ -1,9 +1,12 @@
 """Article-Tag junction model."""
 
-from sqlalchemy import BigInteger, ForeignKey, UniqueConstraint
+from sqlalchemy import BigInteger, ForeignKey, UniqueConstraint, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+
+IDType = BigInteger().with_variant(Integer(), "sqlite")
 
 
 class ArticleTag(Base):
@@ -12,10 +15,10 @@ class ArticleTag(Base):
     __tablename__ = "article_tag"
 
     article_id: Mapped[int] = mapped_column(
-        BigInteger, ForeignKey("article.id", ondelete="CASCADE"), primary_key=True
+        IDType, ForeignKey("article.id", ondelete="CASCADE"), primary_key=True
     )
     tag_id: Mapped[int] = mapped_column(
-        BigInteger, ForeignKey("tag.id", ondelete="CASCADE"), primary_key=True
+        IDType, ForeignKey("tag.id", ondelete="CASCADE"), primary_key=True
     )
 
     # Relationships

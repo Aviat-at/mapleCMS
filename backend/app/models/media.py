@@ -8,12 +8,15 @@ from sqlalchemy.sql import func
 from app.core.database import Base
 
 
+IDType = BigInteger().with_variant(Integer(), "sqlite")
+
+
 class Media(Base):
     """Media model for uploaded files."""
 
     __tablename__ = "media"
 
-    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, index=True)
+    id: Mapped[int] = mapped_column(IDType, primary_key=True, index=True, autoincrement=True)
     filename: Mapped[str] = mapped_column(String(255), nullable=False)
     original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
     file_path: Mapped[str] = mapped_column(String(512), nullable=False)
